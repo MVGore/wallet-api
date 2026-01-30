@@ -1,15 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/wallet_db_test
-    username: wallet_user
-    password: wallet_password
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/wallet_test
+    username: wallet
+    password: 1234
 
   jpa:
     hibernate:
       ddl-auto: validate
 
-logging:
-  level:
-    root: WARN
-    com.wallet: INFO
+  liquibase:
+    enabled: true

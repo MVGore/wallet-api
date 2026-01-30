@@ -1,113 +1,97 @@
 package com.wallet.service;
 
-import com.wallet.dto.WalletOperationRequest;
-import com.wallet.dto.WalletOperationResponse;
-import com.wallet.dto.WalletBalanceResponse;
-import com.wallet.entity.Wallet;
 import com.wallet.entity.Transaction;
-import com.wallet.exception.WalletNotFoundException;
+import com.wallet.entity.Wallet;
 import com.wallet.exception.InsufficientFundsException;
-import com.wallet.repository.WalletRepository;
+import com.wallet.exception.WalletNotFoundException;
 import com.wallet.repository.TransactionRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.wallet.repository.WalletRepository;
+
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
+@Transactional
 public class WalletService {
 
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
 
-    @Transactional
-    public WalletOperationResponse processOperation(WalletOperationRequest request) {
-        log.debug("Processing operation for wallet: {}, type: {}, amount: {}",
-                request.getWalletId(), request.getOperationType(), request.getAmount());
+    public WalletService(WalletRepository walletRepository,
+                         TransactionRepository transactionRepository) {
+        this.walletRepository = walletRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
-        // Use pessimistic lock to handle concurrent requests
-        Wallet wallet = walletRepository.findByWalletIdWithLock(request.getWalletId())
-                .orElseThrow(() -> {
-                    log.warn("Wallet not found: {}", request.getWalletId());
-                    return new WalletNotFoundException(request.getWalletId().toString());
-                });
+    /**
+     * Main operation: DEPOSIT / WITHDRAW
+     * - Concurrency safe (PESSIMISTIC_WRITE)
+     * - Auto-creates wallet on first DEPOSIT
+     * - Rejects invalid operations
+     */
+    public Wallet process(UUID walletId, String operation, BigDecimal amount) {
 
-        BigDecimal balanceBefore = wallet.getBalance();
-        BigDecimal newBalance;
-
-        if (WalletOperationRequest.OperationType.DEPOSIT == request.getOperationType()) {
-            newBalance = balanceBefore.add(request.getAmount());
-            log.info("Deposit operation: wallet={}, amount={}, balanceBefore={}, balanceAfter={}",
-                    request.getWalletId(), request.getAmount(), balanceBefore, newBalance);
-        } else {
-            // WITHDRAW
-            if (balanceBefore.compareTo(request.getAmount()) < 0) {
-                log.warn("Insufficient funds: wallet={}, available={}, requested={}",
-                        request.getWalletId(), balanceBefore, request.getAmount());
-                throw new InsufficientFundsException(balanceBefore, request.getAmount());
-            }
-            newBalance = balanceBefore.subtract(request.getAmount());
-            log.info("Withdrawal operation: wallet={}, amount={}, balanceBefore={}, balanceAfter={}",
-                    request.getWalletId(), request.getAmount(), balanceBefore, newBalance);
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero");
         }
 
-        wallet.setBalance(newBalance);
-        wallet = walletRepository.save(wallet);
-
-        // Record transaction
-        Transaction transaction = Transaction.builder()
-                .walletId(request.getWalletId())
-                .operationType(mapOperationType(request.getOperationType()))
-                .amount(request.getAmount())
-                .balanceBefore(balanceBefore)
-                .balanceAfter(newBalance)
-                .build();
-        transactionRepository.save(transaction);
-
-        return WalletOperationResponse.builder()
-                .walletId(wallet.getWalletId())
-                .balance(wallet.getBalance())
-                .timestamp(System.currentTimeMillis())
-                .build();
-    }
-
-    @Transactional(readOnly = true)
-    public WalletBalanceResponse getBalance(UUID walletId) {
-        log.debug("Retrieving balance for wallet: {}", walletId);
-
-        Wallet wallet = walletRepository.findByWalletId(walletId)
-                .orElseThrow(() -> {
-                    log.warn("Wallet not found: {}", walletId);
-                    return new WalletNotFoundException(walletId.toString());
+        Wallet wallet = walletRepository.findByIdForUpdate(walletId)
+                .orElseGet(() -> {
+                    if (!"DEPOSIT".equalsIgnoreCase(operation)) {
+                        throw new WalletNotFoundException(walletId);
+                    }
+                    Wallet w = new Wallet();
+                    w.setId(walletId);
+                    w.setBalance(BigDecimal.ZERO);
+                    return walletRepository.save(w);
                 });
 
-        return WalletBalanceResponse.builder()
-                .walletId(wallet.getWalletId())
-                .balance(wallet.getBalance())
-                .timestamp(System.currentTimeMillis())
-                .build();
+        if ("WITHDRAW".equalsIgnoreCase(operation)) {
+            if (wallet.getBalance().compareTo(amount) < 0) {
+                throw new InsufficientFundsException();
+            }
+            wallet.setBalance(wallet.getBalance().subtract(amount));
+        }
+        else if ("DEPOSIT".equalsIgnoreCase(operation)) {
+            wallet.setBalance(wallet.getBalance().add(amount));
+        }
+        else {
+            throw new IllegalArgumentException("Invalid operation type");
+        }
+
+        Transaction tx = new Transaction();
+        tx.setId(UUID.randomUUID());
+        tx.setWalletId(walletId);
+        tx.setAmount(amount);
+        tx.setOperation(operation);
+        tx.setCreatedAt(LocalDateTime.now());
+
+        transactionRepository.save(tx);
+
+        return wallet;
     }
 
-    @Transactional
-    public Wallet createWallet(UUID walletId, BigDecimal initialBalance) {
-        log.info("Creating new wallet: {}, initialBalance: {}", walletId, initialBalance);
+    /**
+     * Get wallet balance
+     */
+    public Wallet getWallet(UUID id) {
+        return walletRepository.findById(id)
+                .orElseThrow(() -> new WalletNotFoundException(id));
+    }
 
-        Wallet wallet = Wallet.builder()
-                .walletId(walletId)
-                .balance(initialBalance)
-                .build();
+    /**
+     * Optional helpers
+     */
+    public List<Wallet> getAllWallets() {
+        return walletRepository.findAll();
+    }
 
+    public Wallet saveWallet(Wallet wallet) {
         return walletRepository.save(wallet);
-    }
-
-    private Transaction.OperationType mapOperationType(WalletOperationRequest.OperationType operationType) {
-        return operationType == WalletOperationRequest.OperationType.DEPOSIT ?
-                Transaction.OperationType.DEPOSIT :
-                Transaction.OperationType.WITHDRAW;
     }
 }

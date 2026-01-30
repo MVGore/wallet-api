@@ -1,19 +1,23 @@
 package com.wallet.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class WalletOperationResponse {
-
     private UUID walletId;
-    private BigDecimal balance;
-    private long timestamp;
+    private BigDecimal oldBalance;
+    private BigDecimal newBalance;
+
+    public UUID getWalletId() { return walletId; }
+    public void setWalletId(UUID walletId) { this.walletId = walletId; }
+
+    public BigDecimal getOldBalance() { return oldBalance; }
+    public void setOldBalance(BigDecimal oldBalance) { this.oldBalance = oldBalance; }
+
+    public BigDecimal getNewBalance() { return newBalance; }
+    public void setNewBalance(BigDecimal newBalance) { this.newBalance = newBalance; }
+
+    public enum OperationType {
+        DEPOSIT, WITHDRAW
+    }
 }

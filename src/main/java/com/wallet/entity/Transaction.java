@@ -1,50 +1,76 @@
 package com.wallet.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "transactions", indexes = {
-    @Index(name = "idx_wallet_id", columnList = "wallet_id"),
-    @Index(name = "idx_created_at", columnList = "created_at")
-})
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "wallet_id", nullable = false, columnDefinition = "UUID")
+    @Column(name = "wallet_id", nullable = false)
     private UUID walletId;
 
-    @Column(name = "operation_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OperationType operationType;
-
-    @Column(name = "amount", nullable = false, precision = 19, scale = 2)
+    @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "balance_before", nullable = false, precision = 19, scale = 2)
-    private BigDecimal balanceBefore;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "balance_after", nullable = false, precision = 19, scale = 2)
-    private BigDecimal balanceAfter;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Long createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = System.currentTimeMillis();
-    }
+    @Column(name = "operation")
+    private String operation;
 
     public enum OperationType {
         DEPOSIT, WITHDRAW
+    }
+
+    public Transaction() {}
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(UUID walletId) {
+        this.walletId = walletId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

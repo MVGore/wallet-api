@@ -1,28 +1,21 @@
 package com.wallet.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class WalletOperationRequest {
-
-    @NotNull(message = "Wallet ID cannot be null")
     private UUID walletId;
-
-    @NotNull(message = "Operation type cannot be null")
-    private OperationType operationType;
-
-    @NotNull(message = "Amount cannot be null")
-    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
+    private String operationType;
     private BigDecimal amount;
+
+    public UUID getWalletId() { return walletId; }
+    public void setWalletId(UUID walletId) { this.walletId = walletId; }
+
+    public String getOperationType() { return operationType; }
+    public void setOperationType(String operationType) { this.operationType = operationType; }
+
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public enum OperationType {
         DEPOSIT, WITHDRAW

@@ -450,16 +450,6 @@ export default function () {
 - Review slow query logs
 - Update dependencies
 
-### Upgrade Procedure
-
-1. Pull latest code
-2. Build new image
-3. Run tests
-4. Deploy to staging
-5. Run smoke tests
-6. Deploy to production
-7. Monitor for 24 hours
-
 ## Support
 
 For deployment issues, check:
@@ -468,3 +458,19 @@ For deployment issues, check:
 3. Environment variables
 4. Resource limits
 5. Network configuration
+
+DEPLOYMENT
+
+Ensure environment variables are set for database:
+
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/wallet
+export SPRING_DATASOURCE_USERNAME=wallet
+export SPRING_DATASOURCE_PASSWORD=1234
+
+
+Build and run Docker containers:
+
+docker-compose up --build
+
+
+Test API endpoints via Postman or cURL.

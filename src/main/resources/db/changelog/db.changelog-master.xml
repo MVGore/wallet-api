@@ -2,69 +2,46 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <changeSet id="001-create-wallets-table" author="admin">
+    <changeSet id="1-create-wallet-table" author="test">
         <createTable tableName="wallets">
-            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="wallet_id" type="uuid">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="balance" type="numeric(19, 2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="bigint" defaultValue="0">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_at" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_at" type="bigint">
+            <column name="balance" type="numeric(19,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex indexName="idx_wallet_id" tableName="wallets">
-            <column name="wallet_id"/>
-        </createIndex>
     </changeSet>
 
-    <changeSet id="002-create-transactions-table" author="admin">
+    <changeSet id="2-create-transaction-table" author="test">
         <createTable tableName="transactions">
-            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="wallet_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
-            <column name="operation_type" type="varchar(20)">
+            <column name="amount" type="numeric(19,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="amount" type="numeric(19, 2)">
+            <column name="operation" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="balance_before" type="numeric(19, 2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="balance_after" type="numeric(19, 2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_at" type="bigint">
+            <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex indexName="idx_transaction_wallet_id" tableName="transactions">
-            <column name="wallet_id"/>
-        </createIndex>
-        <createIndex indexName="idx_transaction_created_at" tableName="transactions">
-            <column name="created_at"/>
-        </createIndex>
-    </changeSet>
+        <addForeignKeyConstraint
+        baseTableName="transactions"
+        baseColumnNames="wallet_id"
+        referencedTableName="wallets"
+        referencedColumnNames="id"
+        constraintName="fk_transactions_wallet"/>
 
-    <changeSet id="003-create-databasechangelog-indexes" author="admin">
-        <!-- Additional indexes can be added here as needed for performance -->
     </changeSet>
 
 </databaseChangeLog>

@@ -165,32 +165,6 @@ SERVER_PORT=8080
 - Environment variable support
 - Graceful shutdown configuration
 
-### Documentation ✅
-
-#### Files Included
-1. **README.md** (850+ lines)
-   - Feature overview
-   - Quick start guide
-   - Configuration options
-   - Architecture explanation
-   - Load testing examples
-
-2. **API.md** (600+ lines)
-   - Complete API reference
-   - Request/response examples
-   - Error codes and descriptions
-   - Data types documentation
-   - FAQ and troubleshooting
-
-3. **DEPLOYMENT.md** (700+ lines)
-   - Production deployment guides
-   - Docker Compose setup
-   - Kubernetes manifests
-   - Performance tuning
-   - Security checklist
-   - Troubleshooting guide
-
-### Helper Scripts ✅
 
 #### run.sh (Bash Script)
 ```bash
@@ -248,40 +222,6 @@ mvn test
 python3 concurrency_test.py
 python3 concurrency_test.py stress 120
 ```
-
----
-
-## Key Design Decisions
-
-### 1. Pessimistic Locking for Concurrency
-**Why:** Ensures data consistency under high concurrency without complex distributed locks
-- Each wallet operation acquires exclusive database lock
-- Sequential processing per wallet maintains ACID properties
-- Prevents race conditions and overselling
-
-### 2. Event Sourcing with Transaction Table
-**Why:** Provides complete audit trail and enables analytics
-- Every operation recorded with balance snapshots
-- Enables reconciliation and dispute resolution
-- Supports transaction history API in future
-
-### 3. UUID for IDs
-**Why:** Distributed system friendly, better privacy
-- Natural keys for wallets
-- No sequence guessing
-- Better for distributed databases
-
-### 4. Separate DTOs from Entities
-**Why:** API contract independence
-- Entities can change without API changes
-- Type safety and validation
-- Clear separation of concerns
-
-### 5. Environment-Based Configuration
-**Why:** Container-friendly, flexible deployment
-- No code changes between environments
-- Docker Compose compatible
-- Kubernetes ready
 
 ---
 
