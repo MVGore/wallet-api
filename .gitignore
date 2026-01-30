@@ -5,17 +5,19 @@
 *.swo
 *~
 .DS_Store
+Thumbs.db
 
 # Build and dependency directories
 target/
 build/
 .gradle/
+node_modules/
+
+# Java / JVM
 *.class
 *.jar
 *.war
 *.ear
-*.zip
-*.tar.gz
 
 # Maven
 .m2/
@@ -41,11 +43,7 @@ logs/
 *.db
 *.sqlite
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE-specific files
+# IDE-specific
 *.iml
 *.iws
 *.ipr
