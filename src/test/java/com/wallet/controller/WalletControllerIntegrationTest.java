@@ -1,8 +1,8 @@
 package com.wallet.controller;
 
-import com.wallet.dto.WalletOperationRequest;
-import com.wallet.entity.Wallet;
-import com.wallet.repository.WalletRepository;
+import com.mvgore.walletapi.dto.WalletOperationRequest;
+import com.mvgore.walletapi.entity.Wallet;
+import com.mvgore.walletapi.repository.WalletRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

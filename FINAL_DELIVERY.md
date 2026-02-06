@@ -29,7 +29,6 @@ A production-ready Spring Boot 3 REST API for wallet management that:
 ✓ GlobalExceptionHandler.java  - Error handling
 ✓ All DTOs                     - Request/response models
 ✓ All Exceptions               - Custom exception classes
-✓ Integration Tests            - 15+ test cases
 ✓ Unit Tests                   - Service layer tests
 ```
 

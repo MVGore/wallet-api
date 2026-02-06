@@ -1,4 +1,4 @@
-package com.wallet.dto;
+package com.mvgore.walletapi.dto;
 
 import java.math.BigDecimal;
 import java.util.UUID;

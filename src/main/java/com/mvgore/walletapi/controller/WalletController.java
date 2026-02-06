@@ -1,12 +1,9 @@
-package com.wallet.controller;
+package com.mvgore.walletapi.controller;
 
-import com.wallet.dto.WalletOperationRequest;
-import com.wallet.dto.WalletOperationResponse;
-import com.wallet.dto.WalletBalanceResponse;
-import com.wallet.entity.Wallet;
-import com.wallet.service.WalletService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.mvgore.walletapi.dto.WalletOperationRequest;
+import com.mvgore.walletapi.dto.WalletBalanceResponse;
+import com.mvgore.walletapi.entity.Wallet;
+import com.mvgore.walletapi.service.WalletService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;

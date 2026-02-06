@@ -1,14 +1,14 @@
 package com.wallet.service;
 
-import com.wallet.entity.Wallet;
-import com.wallet.exception.InsufficientFundsException;
-import com.wallet.exception.WalletNotFoundException;
-import com.wallet.repository.TransactionRepository;
-import com.wallet.repository.WalletRepository;
+import com.mvgore.walletapi.entity.Wallet;
+import com.mvgore.walletapi.exception.InsufficientFundsException;
+import com.mvgore.walletapi.exception.WalletNotFoundException;
+import com.mvgore.walletapi.repository.TransactionRepository;
+import com.mvgore.walletapi.repository.WalletRepository;
+import com.mvgore.walletapi.service.WalletService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.Optional;

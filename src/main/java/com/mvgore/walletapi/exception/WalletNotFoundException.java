@@ -1,4 +1,4 @@
-package com.wallet.exception;
+package com.mvgore.walletapi.exception;
 
 import java.util.UUID;
 

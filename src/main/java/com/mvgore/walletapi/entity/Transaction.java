@@ -1,4 +1,4 @@
-package com.wallet.entity;
+package com.mvgore.walletapi.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

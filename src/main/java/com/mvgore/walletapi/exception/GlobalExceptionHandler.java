@@ -1,4 +1,4 @@
-package com.wallet.exception;
+package com.mvgore.walletapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

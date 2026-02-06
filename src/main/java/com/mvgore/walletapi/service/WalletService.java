@@ -1,11 +1,11 @@
-package com.wallet.service;
+package com.mvgore.walletapi.service;
 
-import com.wallet.entity.Transaction;
-import com.wallet.entity.Wallet;
-import com.wallet.exception.InsufficientFundsException;
-import com.wallet.exception.WalletNotFoundException;
-import com.wallet.repository.TransactionRepository;
-import com.wallet.repository.WalletRepository;
+import com.mvgore.walletapi.entity.Transaction;
+import com.mvgore.walletapi.entity.Wallet;
+import com.mvgore.walletapi.exception.InsufficientFundsException;
+import com.mvgore.walletapi.exception.WalletNotFoundException;
+import com.mvgore.walletapi.repository.TransactionRepository;
+import com.mvgore.walletapi.repository.WalletRepository;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

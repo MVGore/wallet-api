@@ -1,6 +1,6 @@
-package com.wallet.repository;
+package com.mvgore.walletapi.repository;
 
-import com.wallet.entity.Wallet;
+import com.mvgore.walletapi.entity.Wallet;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;

@@ -1,4 +1,4 @@
-package com.wallet.dto;
+package com.mvgore.walletapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
