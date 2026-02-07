@@ -29,10 +29,7 @@ public class WalletService {
     }
 
     /**
-     * Main operation: DEPOSIT / WITHDRAW
-     * - Concurrency safe (PESSIMISTIC_WRITE)
-     * - Auto-creates wallet on first DEPOSIT
-     * - Rejects invalid operations
+     * Deposit / Withdraw
      */
     public Wallet process(UUID walletId, String operation, BigDecimal amount) {
 
@@ -41,28 +38,22 @@ public class WalletService {
         }
 
         Wallet wallet = walletRepository.findByIdForUpdate(walletId)
-                .orElseGet(() -> {
-                    if (!"DEPOSIT".equalsIgnoreCase(operation)) {
-                        throw new WalletNotFoundException(walletId);
-                    }
-                    Wallet w = new Wallet();
-                    w.setId(walletId);
-                    w.setBalance(BigDecimal.ZERO);
-                    return walletRepository.save(w);
-                });
+                .orElseThrow(() -> new WalletNotFoundException(walletId));
 
         if ("WITHDRAW".equalsIgnoreCase(operation)) {
             if (wallet.getBalance().compareTo(amount) < 0) {
-                throw new InsufficientFundsException();
+                throw new InsufficientFundsException("Insufficient balance");
             }
             wallet.setBalance(wallet.getBalance().subtract(amount));
-        }
-        else if ("DEPOSIT".equalsIgnoreCase(operation)) {
+
+        } else if ("DEPOSIT".equalsIgnoreCase(operation)) {
             wallet.setBalance(wallet.getBalance().add(amount));
-        }
-        else {
+
+        } else {
             throw new IllegalArgumentException("Invalid operation type");
         }
+
+        walletRepository.save(wallet);
 
         Transaction tx = new Transaction();
         tx.setId(UUID.randomUUID());
@@ -76,17 +67,11 @@ public class WalletService {
         return wallet;
     }
 
-    /**
-     * Get wallet balance
-     */
     public Wallet getWallet(UUID id) {
         return walletRepository.findById(id)
                 .orElseThrow(() -> new WalletNotFoundException(id));
     }
 
-    /**
-     * Optional helpers
-     */
     public List<Wallet> getAllWallets() {
         return walletRepository.findAll();
     }

@@ -6,6 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
+    <!-- 1. Wallet table -->
     <changeSet id="1-create-wallet-table" author="test">
         <createTable tableName="wallets">
             <column name="id" type="uuid">
@@ -17,6 +18,7 @@
         </createTable>
     </changeSet>
 
+    <!-- 2. Transaction table -->
     <changeSet id="2-create-transaction-table" author="test">
         <createTable tableName="transactions">
             <column name="id" type="uuid">
@@ -35,13 +37,49 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint
-        baseTableName="transactions"
-        baseColumnNames="wallet_id"
-        referencedTableName="wallets"
-        referencedColumnNames="id"
-        constraintName="fk_transactions_wallet"/>
 
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="wallet_id"
+                referencedTableName="wallets"
+                referencedColumnNames="id"
+                constraintName="fk_transactions_wallet"/>
+    </changeSet>
+
+    <!-- 3. Users table -->
+    <changeSet id="3-create-users-table" author="test">
+        <createTable tableName="users">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="username" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="role" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 4. Cascade delete transactions when wallet is deleted -->
+    <changeSet id="4-update-transactions-fk-cascade" author="test">
+        <dropForeignKeyConstraint
+                baseTableName="transactions"
+                constraintName="fk_transactions_wallet"/>
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="wallet_id"
+                referencedTableName="wallets"
+                referencedColumnNames="id"
+                constraintName="fk_transactions_wallet"
+                onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>

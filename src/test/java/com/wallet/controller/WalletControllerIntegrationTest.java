@@ -19,9 +19,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(
+    classes = com.mvgore.walletapi.WalletApplication.class,
+    properties = {
+        "spring.security.enabled=false"
+    }
+)
+@AutoConfigureMockMvc(addFilters = false)
 class WalletControllerIntegrationTest {
+
 
     @Autowired
     private MockMvc mockMvc;

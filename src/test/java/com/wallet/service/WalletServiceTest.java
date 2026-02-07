@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class WalletServiceTest {
@@ -40,7 +41,8 @@ class WalletServiceTest {
 
     @Test
     void depositIncreasesBalance() {
-        when(walletRepository.findByIdForUpdate(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdForUpdate(walletId))
+                .thenReturn(Optional.of(wallet));
 
         Wallet result = walletService.process(walletId, "DEPOSIT", new BigDecimal("500"));
 
@@ -51,7 +53,8 @@ class WalletServiceTest {
 
     @Test
     void withdrawDecreasesBalance() {
-        when(walletRepository.findByIdForUpdate(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdForUpdate(walletId))
+                .thenReturn(Optional.of(wallet));
 
         Wallet result = walletService.process(walletId, "WITHDRAW", new BigDecimal("400"));
 
@@ -61,17 +64,32 @@ class WalletServiceTest {
 
     @Test
     void withdrawThrowsInsufficientFunds() {
-        when(walletRepository.findByIdForUpdate(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdForUpdate(walletId))
+                .thenReturn(Optional.of(wallet));
 
         assertThrows(InsufficientFundsException.class, () ->
                 walletService.process(walletId, "WITHDRAW", new BigDecimal("1500")));
     }
 
+    /**
+     * Wallet NOT found + WITHDRAW must fail
+     */
     @Test
-    void walletNotFoundThrowsException() {
-        when(walletRepository.findByIdForUpdate(walletId)).thenReturn(Optional.empty());
+    void depositThrowsExceptionWhenWalletNotFound() {
 
-        assertThrows(WalletNotFoundException.class, () ->
-                walletService.process(walletId, "DEPOSIT", new BigDecimal("100")));
+        UUID walletId = UUID.randomUUID();
+
+        when(walletRepository.findByIdForUpdate(walletId))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                WalletNotFoundException.class,
+                () -> walletService.process(walletId, "DEPOSIT", BigDecimal.valueOf(100))
+        );
+
+        verify(walletRepository, never()).save(any());
+        verify(transactionRepository, never()).save(any());
     }
+
+
 }

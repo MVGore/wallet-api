@@ -12,32 +12,33 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 404: Wallet not found
     @ExceptionHandler(WalletNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleWalletNotFound(WalletNotFoundException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("error", "Wallet not found");
         body.put("message", ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
-    // 400: Insufficient funds
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<Map<String, Object>> handleInsufficientFunds(InsufficientFundsException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("error", "Insufficient funds");
         body.put("message", ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    // 400: All other exceptions
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleAllOtherExceptions(Exception ex) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleBadRequest(IllegalArgumentException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("error", ex.getMessage() != null ? ex.getMessage() : "Bad Request");
+        body.put("error", "Bad request");
+        body.put("message", ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 }
