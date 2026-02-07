@@ -1,14 +1,14 @@
 package com.mvgore.walletapi.controller;
 
+import com.mvgore.walletapi.dto.WalletOperationRequest;
 import com.mvgore.walletapi.entity.Wallet;
 import com.mvgore.walletapi.service.WalletService;
+import com.mvgore.walletapi.auth.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.UUID;
-
 @RestController
-@RequestMapping("/wallets")
+@RequestMapping("/api/v1/wallet")
 public class WalletController {
 
     private final WalletService walletService;
@@ -17,20 +17,25 @@ public class WalletController {
         this.walletService = walletService;
     }
 
-    @PostMapping("/{id}/credit")
-    public Wallet credit(@PathVariable UUID id,
-                         @RequestParam BigDecimal amount) {
-        return walletService.credit(id, amount);
+    @PostMapping("/create")
+    public Wallet createWallet(@AuthenticationPrincipal User user) {
+        return walletService.createWalletForUser(user.getId());
     }
 
-    @PostMapping("/{id}/debit")
-    public Wallet debit(@PathVariable UUID id,
-                        @RequestParam BigDecimal amount) {
-        return walletService.debit(id, amount);
+    @PostMapping("/credit")
+    public Wallet credit(@AuthenticationPrincipal User user,
+                         @RequestBody WalletOperationRequest request) {
+        return walletService.credit(user.getId(), request.getAmount());
     }
 
-    @GetMapping("/{id}")
-    public Wallet getWallet(@PathVariable UUID id) {
-        return walletService.getWallet(id);
+    @PostMapping("/debit")
+    public Wallet debit(@AuthenticationPrincipal User user,
+                        @RequestBody WalletOperationRequest request) {
+        return walletService.debit(user.getId(), request.getAmount());
+    }
+
+    @GetMapping("/balance")
+    public Wallet getBalance(@AuthenticationPrincipal User user) {
+        return walletService.getWalletByUser(user.getId());
     }
 }

@@ -19,9 +19,18 @@ public class Wallet {
     @Column(name = "user_id", nullable = false, unique = true)
     private UUID userId;
 
+    // JPA requires a protected no-arg constructor
     protected Wallet() {}
 
+    // Main constructor used in application
     public Wallet(BigDecimal balance, UUID userId) {
+        this.balance = balance;
+        this.userId = userId;
+    }
+
+    // ✅ Test / utility constructor
+    public Wallet(UUID id, BigDecimal balance, UUID userId) {
+        this.id = id;
         this.balance = balance;
         this.userId = userId;
     }

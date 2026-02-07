@@ -2,5 +2,8 @@ package com.mvgore.walletapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransactionRepository extends JpaRepository<Object, Long> {
+import com.mvgore.walletapi.entity.*;
+import java.util.UUID;
+
+public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 }

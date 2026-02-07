@@ -22,20 +22,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(sm ->
-                    sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/v1/auth/**").permitAll()
+            .csrf().disable()
+            .authorizeHttpRequests(authorizeRequests -> 
+                authorizeRequests
+                    .requestMatchers("/api/v1/auth/**").permitAll()  // Allow registration and login
                     .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtFilter,
-                    UsernamePasswordAuthenticationFilter.class);
-
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -45,9 +40,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 }

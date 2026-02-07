@@ -1,14 +1,18 @@
 package com.mvgore.walletapi.auth;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -21,19 +25,13 @@ public class User {
 
     protected User() {}
 
-    // ✅ REQUIRED by AuthController
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.role = "USER";
+        this.role = "USER";  // Default role
     }
 
-    public User(String username, String password, String role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
+    public UUID getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public String getRole() { return role; }

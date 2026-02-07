@@ -1,91 +1,94 @@
 package com.wallet.service;
 
 import com.mvgore.walletapi.entity.Wallet;
-import com.mvgore.walletapi.entity.Transaction;
+import com.mvgore.walletapi.exception.InsufficientFundsException;
+import com.mvgore.walletapi.exception.WalletNotFoundException;
 import com.mvgore.walletapi.repository.TransactionRepository;
 import com.mvgore.walletapi.repository.WalletRepository;
 import com.mvgore.walletapi.service.WalletService;
-import com.mvgore.walletapi.exception.InsufficientFundsException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class WalletServiceTest {
 
-    @Mock
     private WalletRepository walletRepository;
-
-    @Mock
     private TransactionRepository transactionRepository;
-
-    @InjectMocks
     private WalletService walletService;
 
-    private UUID walletId;
-    private Wallet wallet;
+    private UUID userId;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
-        walletId = UUID.randomUUID();
-        // Use the constructor since setters are gone
-        wallet = new Wallet(walletId, BigDecimal.valueOf(1000));
-
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        when(walletRepository.save(any(Wallet.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null); // if you need a stub
+        walletRepository = mock(WalletRepository.class);
+        transactionRepository = mock(TransactionRepository.class);
+        walletService = new WalletService(walletRepository, transactionRepository);
+        userId = UUID.randomUUID();
     }
 
     @Test
-    void testCredit() {
-        BigDecimal amount = BigDecimal.valueOf(500);
+    void createWalletForUser_success() {
+        when(walletRepository.findByUserId(userId)).thenReturn(Optional.empty());
+        Wallet walletToSave = new Wallet(BigDecimal.ZERO, userId);
+        when(walletRepository.save(Mockito.any(Wallet.class))).thenReturn(walletToSave);
 
-        Wallet updatedWallet = walletService.credit(walletId, amount);
-
-        assertEquals(BigDecimal.valueOf(1500), updatedWallet.getBalance());
-        verify(walletRepository).save(wallet);
-        verify(transactionRepository).save(any(Transaction.class));
+        Wallet created = walletService.createWalletForUser(userId);
+        assertThat(created.getBalance()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(created.getUserId()).isEqualTo(userId);
     }
 
     @Test
-    void testDebit() {
-        BigDecimal amount = BigDecimal.valueOf(300);
+    void createWalletForUser_alreadyExists() {
+        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(new Wallet(BigDecimal.ZERO, userId)));
 
-        Wallet updatedWallet = walletService.debit(walletId, amount);
-
-        assertEquals(BigDecimal.valueOf(700), updatedWallet.getBalance());
-        verify(walletRepository).save(wallet);
-        verify(transactionRepository).save(any(Transaction.class));
+        assertThrows(IllegalStateException.class,
+                () -> walletService.createWalletForUser(userId));
     }
 
     @Test
-    void testDebitInsufficientFunds() {
-        BigDecimal amount = BigDecimal.valueOf(1500);
+    void creditWallet_success() {
+        Wallet wallet = new Wallet(BigDecimal.valueOf(100), userId);
+        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.save(wallet)).thenReturn(wallet);
 
-        Exception exception = assertThrows(InsufficientFundsException.class, () -> {
-            walletService.debit(walletId, amount);
-        });
-
-        assertTrue(exception.getMessage().contains("Insufficient"));
-        verify(walletRepository, never()).save(wallet);
-        verify(transactionRepository, never()).save(any(Transaction.class));
+        Wallet updated = walletService.credit(userId, BigDecimal.valueOf(50));
+        assertThat(updated.getBalance()).isEqualByComparingTo(BigDecimal.valueOf(150));
+        verify(transactionRepository, times(1)).save(Mockito.any());
     }
 
     @Test
-    void testGetWallet() {
-        Wallet foundWallet = walletService.getWallet(walletId);
-        assertNotNull(foundWallet);
-        assertEquals(walletId, foundWallet.getId());
+    void debitWallet_success() {
+        Wallet wallet = new Wallet(BigDecimal.valueOf(200), userId);
+        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.save(wallet)).thenReturn(wallet);
+
+        Wallet updated = walletService.debit(userId, BigDecimal.valueOf(150));
+        assertThat(updated.getBalance()).isEqualByComparingTo(BigDecimal.valueOf(50));
+        verify(transactionRepository, times(1)).save(Mockito.any());
+    }
+
+    @Test
+    void debitWallet_insufficientFunds() {
+        Wallet wallet = new Wallet(BigDecimal.valueOf(100), userId);
+        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
+
+        assertThrows(InsufficientFundsException.class,
+                () -> walletService.debit(userId, BigDecimal.valueOf(150)));
+    }
+
+    @Test
+    void getWalletByUser_notFound() {
+        when(walletRepository.findByUserId(userId)).thenReturn(Optional.empty());
+
+        assertThrows(WalletNotFoundException.class,
+                () -> walletService.getWalletByUser(userId));
     }
 }

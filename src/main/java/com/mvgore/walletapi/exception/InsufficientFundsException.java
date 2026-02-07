@@ -1,10 +1,14 @@
 package com.mvgore.walletapi.exception;
 
-import java.math.BigDecimal;
-
 public class InsufficientFundsException extends RuntimeException {
 
-    public InsufficientFundsException(BigDecimal balance, BigDecimal amount) {
-        super("Insufficient funds. Balance: " + balance + ", Requested: " + amount);
+    // Constructor that accepts a message
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
+
+    // Optional: no-args constructor
+    public InsufficientFundsException() {
+        super("Insufficient funds");
     }
 }
