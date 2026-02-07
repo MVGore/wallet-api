@@ -30,7 +30,7 @@
             <column name="amount" type="numeric(19,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="operation" type="varchar(20)">
+            <column name="type" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp">
@@ -80,6 +80,47 @@
                 referencedColumnNames="id"
                 constraintName="fk_transactions_wallet"
                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- 5. Add user_id to wallets (SAFE WAY) -->
+    <changeSet id="5-add-user-id-to-wallets" author="test">
+
+        <!-- Step 1: add column as NULLABLE -->
+        <addColumn tableName="wallets">
+            <column name="user_id" type="uuid"/>
+        </addColumn>
+
+        <!-- Step 2: backfill existing rows -->
+        <sql>
+            UPDATE wallets
+            SET user_id = id
+            WHERE user_id IS NULL;
+        </sql>
+
+        <!-- Step 3: enforce constraints -->
+        <addNotNullConstraint
+                tableName="wallets"
+                columnName="user_id"
+                columnDataType="uuid"/>
+
+        <addUniqueConstraint
+                tableName="wallets"
+                columnNames="user_id"
+                constraintName="uk_wallet_user_id"/>
+
+    </changeSet>
+
+    <!-- 6. Rename operation -> type in transactions (safe if column exists) -->
+    <changeSet id="6-rename-operation-to-type" author="test">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="transactions" columnName="operation"/>
+        </preConditions>
+
+        <renameColumn
+                tableName="transactions"
+                oldColumnName="operation"
+                newColumnName="type"
+                columnDataType="varchar(255)"/>
     </changeSet>
 
 </databaseChangeLog>

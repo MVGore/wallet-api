@@ -41,16 +41,18 @@ class WalletControllerIntegrationTest {
     private UUID walletId;
 
     @BeforeEach
-    void setUp() {
-        walletRepository.deleteAll();
+        void setUp() {
+            walletRepository.deleteAll();
 
-        Wallet wallet = new Wallet();
-        wallet.setId(UUID.randomUUID());
-        wallet.setBalance(new BigDecimal("1000.00"));
+            Wallet wallet = new Wallet(
+                    UUID.randomUUID(),
+                    BigDecimal.valueOf(1000)
+            );
 
-        walletRepository.save(wallet);
-        walletId = wallet.getId();
-    }
+            wallet = walletRepository.save(wallet);
+            walletId = wallet.getId();
+        }
+
 
     @Test
     void depositEndpointWorks() throws Exception {

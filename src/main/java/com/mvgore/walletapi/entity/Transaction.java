@@ -1,10 +1,6 @@
 package com.mvgore.walletapi.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,63 +10,48 @@ import java.util.UUID;
 public class Transaction {
 
     @Id
+    @GeneratedValue
+    @Column(nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "wallet_id", nullable = false)
-    private UUID walletId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private Wallet wallet;
 
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @Column(nullable = false)
+    private String type; // "CREDIT" or "DEBIT"
+
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "operation")
-    private String operation;
+    protected Transaction() {}
 
-    public enum OperationType {
-        DEPOSIT, WITHDRAW
+    public Transaction(Wallet wallet, BigDecimal amount, String type) {
+        this.wallet = wallet;
+        this.amount = amount;
+        this.type = type;
     }
-
-    public Transaction() {}
 
     public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getWalletId() {
-        return walletId;
-    }
-
-    public void setWalletId(UUID walletId) {
-        this.walletId = walletId;
+    public Wallet getWallet() {
+        return wallet;
     }
 
     public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
+    public String getType() {
+        return type;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

@@ -1,10 +1,12 @@
 package com.mvgore.walletapi.exception;
 
-import java.util.UUID;
-
 public class WalletNotFoundException extends RuntimeException {
 
-    public WalletNotFoundException(UUID walletId) {
-        super("Wallet with ID " + walletId + " not found");
+    public WalletNotFoundException() {
+        super("Wallet not found");
+    }
+
+    public WalletNotFoundException(String message) {
+        super(message);
     }
 }
