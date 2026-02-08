@@ -5,7 +5,7 @@ import com.mvgore.walletapi.auth.UserRepository;
 import com.mvgore.walletapi.dto.WalletOperationRequest;
 import com.mvgore.walletapi.entity.Wallet;
 import com.mvgore.walletapi.service.WalletService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,35 +31,39 @@ public class WalletController {
     }
 
     @PostMapping("/create")
-    public Wallet createWallet(
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
+    public Wallet createWallet(Authentication authentication) {
+        UserDetails userDetails =
+                (UserDetails) authentication.getPrincipal();
         User user = getCurrentUser(userDetails);
         return walletService.createWalletForUser(user.getId());
     }
 
     @PostMapping("/credit")
     public Wallet credit(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @RequestBody WalletOperationRequest request
     ) {
+        UserDetails userDetails =
+                (UserDetails) authentication.getPrincipal();
         User user = getCurrentUser(userDetails);
         return walletService.credit(user.getId(), request.getAmount());
     }
 
     @PostMapping("/debit")
     public Wallet debit(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @RequestBody WalletOperationRequest request
     ) {
+        UserDetails userDetails =
+                (UserDetails) authentication.getPrincipal();
         User user = getCurrentUser(userDetails);
         return walletService.debit(user.getId(), request.getAmount());
     }
 
     @GetMapping("/balance")
-    public Wallet getBalance(
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
+    public Wallet getBalance(Authentication authentication) {
+        UserDetails userDetails =
+                (UserDetails) authentication.getPrincipal();
         User user = getCurrentUser(userDetails);
         return walletService.getWalletByUser(user.getId());
     }
