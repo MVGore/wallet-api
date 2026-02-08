@@ -1,0 +1,207 @@
+
+Folder PATH listing
+Volume serial number is 9001-EF2D
+C:.
+|   .gitignore
+|   00_START_HERE.md
+|   API.md
+|   API_COMPLETE_OUTPUT.md
+|   app.err
+|   app.out
+|   CHECKLIST.md
+|   COMPLETION_REPORT.md
+|   concurrency_test.py
+|   DELIVERY_COMPLETE.txt
+|   DEPLOYMENT.md
+|   DESIRED_OUTPUT.md
+|   docker-compose.yml
+|   Dockerfile
+|   DOCUMENTATION_INDEX.md
+|   EXECUTION_SUMMARY.md
+|   FINAL_DELIVERY.md
+|   folder_structure.txt
+|   IMPLEMENTATION_SUMMARY.md
+|   INDEX.md
+|   LIVE_OUTPUT_EXAMPLES.md
+|   pom.xml
+|   PROJECT_COMPLETE.md
+|   PROJECT_STATUS.md
+|   QUICK_START.md
+|   README.md
+|   README_FINAL.md
+|   run.bat
+|   run.sh
+|   STARTUP_GUIDE.md
+|   structure.txt
+|   test-api.bat
+|   test-api.ps1
+|   test-api.sh
+|   TEST_DEMONSTRATION.md
+|   wallet-logs.txt
+|   
++---src
+|   +---main
+|   |   +---java
+|   |   |   \---com
+|   |   |       \---mvgore
+|   |   |           \---walletapi
+|   |   |               |   WalletApplication.java
+|   |   |               |   
+|   |   |               +---auth
+|   |   |               |       AuthController.java
+|   |   |               |       AuthResponse.java
+|   |   |               |       LoginRequest.java
+|   |   |               |       RegisterRequest.java
+|   |   |               |       User.java
+|   |   |               |       UserRepository.java
+|   |   |               |       
+|   |   |               +---config
+|   |   |               |       SecurityConfig.java
+|   |   |               |       
+|   |   |               +---controller
+|   |   |               |       WalletController.java
+|   |   |               |       
+|   |   |               +---dto
+|   |   |               |       ErrorResponse.java
+|   |   |               |       WalletBalanceResponse.java
+|   |   |               |       WalletOperationRequest.java
+|   |   |               |       WalletOperationResponse.java
+|   |   |               |       
+|   |   |               +---entity
+|   |   |               |       Transaction.java
+|   |   |               |       TransactionType.java
+|   |   |               |       Wallet.java
+|   |   |               |       
+|   |   |               +---exception
+|   |   |               |       GlobalExceptionHandler.java
+|   |   |               |       InsufficientFundsException.java
+|   |   |               |       WalletException.java
+|   |   |               |       WalletNotFoundException.java
+|   |   |               |       
+|   |   |               +---repository
+|   |   |               |       TransactionRepository.java
+|   |   |               |       WalletRepository.java
+|   |   |               |       
+|   |   |               +---security
+|   |   |               |       CustomUserDetailsService.java
+|   |   |               |       JwtFilter.java
+|   |   |               |       JwtUtil.java
+|   |   |               |       
+|   |   |               \---service
+|   |   |                       WalletService.java
+|   |   |                       
+|   |   \---resources
+|   |       |   application-test.yml
+|   |       |   application.yml
+|   |       |   
+|   |       \---db
+|   |           \---changelog
+|   |                   db.changelog-master.xml
+|   |                   
+|   \---test
+|       \---java
+|           \---com
+|               \---wallet
+|                   +---controller
+|                   |       WalletControllerIntegrationTest.java
+|                   |       
+|                   \---service
+|                           WalletServiceTest.java
+|                           
+\---target
+    |   wallet-api-1.0.0.jar
+    |   wallet-api-1.0.0.jar.original
+    |   
+    +---classes
+    |   |   application-test.yml
+    |   |   application.yml
+    |   |   
+    |   +---com
+    |   |   \---mvgore
+    |   |       \---walletapi
+    |   |           |   WalletApplication.class
+    |   |           |   
+    |   |           +---auth
+    |   |           |       AuthController.class
+    |   |           |       AuthResponse.class
+    |   |           |       LoginRequest.class
+    |   |           |       RegisterRequest.class
+    |   |           |       User.class
+    |   |           |       UserRepository.class
+    |   |           |       
+    |   |           +---config
+    |   |           |       SecurityConfig.class
+    |   |           |       
+    |   |           +---controller
+    |   |           |       WalletController.class
+    |   |           |       
+    |   |           +---dto
+    |   |           |       ErrorResponse.class
+    |   |           |       WalletBalanceResponse$OperationType.class
+    |   |           |       WalletBalanceResponse.class
+    |   |           |       WalletOperationRequest$OperationType.class
+    |   |           |       WalletOperationRequest.class
+    |   |           |       WalletOperationResponse$OperationType.class
+    |   |           |       WalletOperationResponse.class
+    |   |           |       
+    |   |           +---entity
+    |   |           |       Transaction.class
+    |   |           |       TransactionType.class
+    |   |           |       Wallet.class
+    |   |           |       
+    |   |           +---exception
+    |   |           |       GlobalExceptionHandler.class
+    |   |           |       InsufficientFundsException.class
+    |   |           |       WalletException.class
+    |   |           |       WalletNotFoundException.class
+    |   |           |       
+    |   |           +---repository
+    |   |           |       TransactionRepository.class
+    |   |           |       WalletRepository.class
+    |   |           |       
+    |   |           +---security
+    |   |           |       CustomUserDetailsService.class
+    |   |           |       JwtFilter.class
+    |   |           |       JwtUtil.class
+    |   |           |       
+    |   |           \---service
+    |   |                   WalletService.class
+    |   |                   
+    |   \---db
+    |       \---changelog
+    |               db.changelog-master.xml
+    |               
+    +---generated-sources
+    |   \---annotations
+    +---generated-test-sources
+    |   \---test-annotations
+    +---maven-archiver
+    |       pom.properties
+    |       
+    +---maven-status
+    |   \---maven-compiler-plugin
+    |       +---compile
+    |       |   \---default-compile
+    |       |           createdFiles.lst
+    |       |           inputFiles.lst
+    |       |           
+    |       \---testCompile
+    |           \---default-testCompile
+    |                   createdFiles.lst
+    |                   inputFiles.lst
+    |                   
+    +---surefire-reports
+    |       com.wallet.controller.WalletControllerIntegrationTest.txt
+    |       com.wallet.service.WalletServiceTest.txt
+    |       TEST-com.wallet.controller.WalletControllerIntegrationTest.xml
+    |       TEST-com.wallet.service.WalletServiceTest.xml
+    |       
+    \---test-classes
+        \---com
+            \---wallet
+                +---controller
+                |       WalletControllerIntegrationTest.class
+                |       
+                \---service
+                        WalletServiceTest.class
+                        
