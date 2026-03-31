@@ -1,0 +1,204 @@
+Folder PATH listing
+Volume serial number is 3CE6-6A21
+E:.
+|   .gitattributes
+|   .gitignore
+|   Dockerfile
+|   HELP.md
+|   Makefile
+|   mvnw
+|   mvnw.cmd
+|   pom.xml
+|   structure.txt
+|   
++---.idea
+|       .gitignore
+|       compiler.xml
+|       encodings.xml
+|       jarRepositories.xml
+|       misc.xml
+|       workspace.xml
+|       
++---.mvn
+|   \---wrapper
+|           maven-wrapper.properties
+|           
++---src
+|   +---main
+|   |   +---java
+|   |   |   \---com
+|   |   |       \---mvgore
+|   |   |           \---walletapi
+|   |   |               |   WalletApiApplication.java
+|   |   |               |   
+|   |   |               +---configuration
+|   |   |               |       SecurityConfig.java
+|   |   |               |       
+|   |   |               +---controller
+|   |   |               |       AdminController.java
+|   |   |               |       AuthController.java
+|   |   |               |       UserController.java
+|   |   |               |       WalletController.java
+|   |   |               |       
+|   |   |               +---dto
+|   |   |               |   +---transaction
+|   |   |               |   |       TransactionMapper.java
+|   |   |               |   |       TransactionResponseDTO.java
+|   |   |               |   |       ValidateTransactionResponseDTO.java
+|   |   |               |   |       
+|   |   |               |   +---user
+|   |   |               |   |       ChangePasswordRequestDTO.java
+|   |   |               |   |       ForgotPasswordRequestDTO.java
+|   |   |               |   |       LoginRequestDTO.java
+|   |   |               |   |       LoginResponseDTO.java
+|   |   |               |   |       RegisterRequestDTO.java
+|   |   |               |   |       RegisterResponseDTO.java
+|   |   |               |   |       ResetPasswordDTO.java
+|   |   |               |   |       UserMapper.java
+|   |   |               |   |       UserResponseDTO.java
+|   |   |               |   |       
+|   |   |               |   \---wallet
+|   |   |               |           TransferResponseDTO.java
+|   |   |               |           WalletMapper.java
+|   |   |               |           WalletRequestDTO.java
+|   |   |               |           WalletResponseDTO.java
+|   |   |               |           
+|   |   |               +---entity
+|   |   |               |       Transaction.java
+|   |   |               |       TransactionType.java
+|   |   |               |       User.java
+|   |   |               |       Wallet.java
+|   |   |               |       
+|   |   |               +---exception
+|   |   |               |       ErrorResponse.java
+|   |   |               |       GlobalExceptionHandler.java
+|   |   |               |       InvalidTokenException.java
+|   |   |               |       ResourceNotFoundException.java
+|   |   |               |       
+|   |   |               +---repository
+|   |   |               |       TransactionRepository.java
+|   |   |               |       UserRepository.java
+|   |   |               |       WalletRepository.java
+|   |   |               |       
+|   |   |               +---security
+|   |   |               |       CustomUserDetails.java
+|   |   |               |       JwtAuthFilter.java
+|   |   |               |       JwtUtil.java
+|   |   |               |       
+|   |   |               \---service
+|   |   |                       AdminService.java
+|   |   |                       AuthService.java
+|   |   |                       CustomUserDetailsService.java
+|   |   |                       UserService.java
+|   |   |                       WalletService.java
+|   |   |                       
+|   |   \---resources
+|   |       |   application.properties
+|   |       |   
+|   |       +---static
+|   |       \---templates
+|   \---test
+|       \---java
+|           \---com
+|               \---mvgore
+|                   \---walletapi
+|                           WalletApiApplicationTests.java
+|                           
+\---target
+    |   wallet-api-0.0.1-SNAPSHOT.jar
+    |   wallet-api-0.0.1-SNAPSHOT.jar.original
+    |   
+    +---classes
+    |   |   application.properties
+    |   |   
+    |   \---com
+    |       \---mvgore
+    |           \---walletapi
+    |               |   WalletApiApplication.class
+    |               |   
+    |               +---configuration
+    |               |       SecurityConfig.class
+    |               |       
+    |               +---controller
+    |               |       AdminController.class
+    |               |       AuthController.class
+    |               |       UserController.class
+    |               |       WalletController.class
+    |               |       
+    |               +---dto
+    |               |   +---transaction
+    |               |   |       TransactionMapper.class
+    |               |   |       TransactionResponseDTO.class
+    |               |   |       ValidateTransactionResponseDTO.class
+    |               |   |       
+    |               |   +---user
+    |               |   |       ChangePasswordRequestDTO.class
+    |               |   |       ForgotPasswordRequestDTO.class
+    |               |   |       LoginRequestDTO.class
+    |               |   |       LoginResponseDTO.class
+    |               |   |       RegisterRequestDTO.class
+    |               |   |       RegisterResponseDTO.class
+    |               |   |       ResetPasswordDTO.class
+    |               |   |       UserMapper.class
+    |               |   |       UserResponseDTO.class
+    |               |   |       
+    |               |   \---wallet
+    |               |           TransferResponseDTO.class
+    |               |           WalletMapper.class
+    |               |           WalletRequestDTO.class
+    |               |           WalletResponseDTO.class
+    |               |           
+    |               +---entity
+    |               |       Transaction.class
+    |               |       TransactionType.class
+    |               |       User.class
+    |               |       Wallet.class
+    |               |       
+    |               +---exception
+    |               |       ErrorResponse.class
+    |               |       GlobalExceptionHandler.class
+    |               |       InvalidTokenException.class
+    |               |       ResourceNotFoundException.class
+    |               |       
+    |               +---repository
+    |               |       TransactionRepository.class
+    |               |       UserRepository.class
+    |               |       WalletRepository.class
+    |               |       
+    |               +---security
+    |               |       CustomUserDetails.class
+    |               |       JwtAuthFilter.class
+    |               |       JwtUtil.class
+    |               |       
+    |               \---service
+    |                       AdminService.class
+    |                       AuthService.class
+    |                       CustomUserDetailsService.class
+    |                       UserService.class
+    |                       WalletService.class
+    |                       
+    +---generated-sources
+    |   \---annotations
+    +---generated-test-sources
+    |   \---test-annotations
+    +---maven-archiver
+    |       pom.properties
+    |       
+    +---maven-status
+    |   \---maven-compiler-plugin
+    |       +---compile
+    |       |   \---default-compile
+    |       |           createdFiles.lst
+    |       |           inputFiles.lst
+    |       |           
+    |       \---testCompile
+    |           \---default-testCompile
+    |                   createdFiles.lst
+    |                   inputFiles.lst
+    |                   
+    \---test-classes
+        \---com
+            \---mvgore
+                \---walletapi
+                        WalletApiApplicationTests.class
+                        
